@@ -17,9 +17,12 @@ spec_generator = FastPitchModel.from_pretrained("tts_en_fastpitch_multispeaker")
 from nemo.collections.tts.models import HifiGanModel
 model = HifiGanModel.from_pretrained(model_name="tts_en_hifitts_hifigan_ft_fastpitch")
 
+# Select Speaker ID
+speaker_id = 1
+
 def text_to_speech(text):
     tokens = spec_generator.parse(text, normalize=False)
-    spectrogram = spec_generator.generate_spectrogram(tokens=tokens, speaker=10)
+    spectrogram = spec_generator.generate_spectrogram(tokens=tokens, speaker=speaker_id)
     audio = model.convert_spectrogram_to_audio(spec=spectrogram)
     audio = audio.cpu().detach().numpy()[0]
     return Audio._make_wav(audio, 44100, False)
