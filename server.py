@@ -38,7 +38,7 @@ class Handler(http.server.SimpleHTTPRequestHandler):
         content_len = int(self.headers.get('Content-Length'))
         message = json.loads(self.rfile.read(content_len))
         self._set_headers()
-        print('Rs message: ', message)
+        print('Rq message: ', message)
         self.wfile.write(text_to_speech(message['speaker_id'], message['text']))
 
     def do_GET(self):
