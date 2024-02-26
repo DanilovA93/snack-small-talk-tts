@@ -46,5 +46,5 @@ class Handler(http.server.SimpleHTTPRequestHandler):
         self.end_headers()
 
 
-httpd = socketserver.TCPServer(('', 8000), Handler)
+httpd = socketserver.TCPServer(('', 8002), Handler)
 httpd.serve_forever()
