@@ -8,8 +8,8 @@ from IPython.display import Audio
 from transformers import AutoProcessor, AutoModel
 
 # download and load all models
-processor = AutoProcessor.from_pretrained("suno/bark-small")
-model = AutoModel.from_pretrained("suno/bark-small").to("cuda")
+processor = AutoProcessor.from_pretrained("suno/bark")
+model = AutoModel.from_pretrained("suno/bark").to("cuda")
 
 def text_to_speech(speaker_id, text):
     inputs = processor(
