@@ -17,9 +17,8 @@ def text_to_speech(speaker_id, text):
         return_tensors="pt",
     )
     inputs = inputs.to("cuda")
-    speech_values = model.generate(**inputs, do_sample=True)
-    sampling_rate = model.generation_config.sample_rate
-    return Audio._make_wav(speech_values.cpu().numpy().squeeze(), rate=sampling_rate, normalize=False)
+    speech_values = model.generate(**inputs, do_sample=False)
+    return Audio._make_wav(speech_values.cpu().numpy().squeeze(), rate=SAMPLE_RATE, normalize=False)
 
 
 class Handler(http.server.SimpleHTTPRequestHandler):
