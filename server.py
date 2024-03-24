@@ -5,13 +5,21 @@ from http import HTTPStatus
 from bark import SAMPLE_RATE, generate_audio, preload_models
 from scipy.io.wavfile import write as write_wav
 from IPython.display import Audio
+from transformers import AutoProcessor, AutoModel
 
 # download and load all models
-preload_models()
+processor = AutoProcessor.from_pretrained("suno/bark-small")
+model = AutoModel.from_pretrained("suno/bark-small").to("cuda")
 
 def text_to_speech(speaker_id, text):
-    audio_array = generate_audio(text_prompt)
-    return Audio._make_wav(audio_array, SAMPLE_RATE)
+    inputs = processor(
+        text=[text],
+        return_tensors="pt",
+    )
+    inputs = inputs.to("cuda")
+    speech_values = model.generate(**inputs, do_sample=True)
+    sampling_rate = model.generation_config.sample_rate
+    return Audio._make_wav(speech_values.cpu().numpy().squeeze(), rate=sampling_rate, False)
 
 
 class Handler(http.server.SimpleHTTPRequestHandler):
