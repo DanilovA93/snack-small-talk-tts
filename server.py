@@ -2,27 +2,16 @@ import http.server
 import socketserver
 import json
 from http import HTTPStatus
-import torch
+from bark import SAMPLE_RATE, generate_audio, preload_models
+from scipy.io.wavfile import write as write_wav
 from IPython.display import Audio
-from nemo.collections.tts.models.base import SpectrogramGenerator, Vocoder
 
-# Select Device
-device = "cuda" if torch.cuda.is_available() else "cpu"
-
-# Load spectrogram generator
-from nemo.collections.tts.models import FastPitchModel
-spec_generator = FastPitchModel.from_pretrained("tts_en_fastpitch_multispeaker").eval().to(device)
-
-# Load Vocoder
-from nemo.collections.tts.models import HifiGanModel
-model = HifiGanModel.from_pretrained(model_name="tts_en_hifitts_hifigan_ft_fastpitch")
+# download and load all models
+preload_models()
 
 def text_to_speech(speaker_id, text):
-    tokens = spec_generator.parse(text, normalize=False)
-    spectrogram = spec_generator.generate_spectrogram(tokens=tokens, speaker=speaker_id)
-    audio = model.convert_spectrogram_to_audio(spec=spectrogram)
-    audio = audio.cpu().detach().numpy()[0]
-    return Audio._make_wav(audio, 44100, False)
+    audio = audio_array = generate_audio(text_prompt)
+    return Audio._make_wav(audio, SAMPLE_RATE, False)
 
 
 class Handler(http.server.SimpleHTTPRequestHandler):
