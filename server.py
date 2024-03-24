@@ -10,8 +10,8 @@ from IPython.display import Audio
 preload_models()
 
 def text_to_speech(speaker_id, text):
-    audio = audio_array = generate_audio(text_prompt)
-    return Audio._make_wav(audio, SAMPLE_RATE, False)
+    audio_array = generate_audio(text_prompt)
+    return Audio._make_wav(audio_array, SAMPLE_RATE)
 
 
 class Handler(http.server.SimpleHTTPRequestHandler):
