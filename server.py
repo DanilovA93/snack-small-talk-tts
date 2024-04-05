@@ -12,10 +12,11 @@ device = "cuda" if torch.cuda.is_available() else "cpu"
 print(TTS().list_models())
 
 # Init TTS with the target model name
-tts = TTS("tts_models/multilingual/multi-dataset/xtts_v2").to(device)
+tts = TTS(model_name="tts_models/de/thorsten/tacotron2-DDC", progress_bar=False).to(device)
 
 def text_to_speech(speaker_id, text):
-    return tts.tts(text=text, language="en")
+    tts.tts_to_file(text="Ich bin eine Testnachricht.", file_path="test.wav")
+    return "OK"
 
 class Handler(http.server.SimpleHTTPRequestHandler):
     def _set_headers(self):
