@@ -2,28 +2,13 @@ import http.server
 import socketserver
 import json
 from http import HTTPStatus
-import torch
-from IPython.display import Audio
-from nemo.collections.tts.models.base import SpectrogramGenerator, Vocoder
+import coqui_tts as ctts
+import speech_recognition as sr
 
-# Select Device
-device = "cuda" if torch.cuda.is_available() else "cpu"
-
-# Load spectrogram generator
-from nemo.collections.tts.models import FastPitchModel
-spec_generator = FastPitchModel.from_pretrained("tts_en_fastpitch_multispeaker").eval().to(device)
-
-# Load Vocoder
-from nemo.collections.tts.models import HifiGanModel
-model = HifiGanModel.from_pretrained(model_name="tts_en_hifitts_hifigan_ft_fastpitch")
+tts = ctts.TextToSpeech()
 
 def text_to_speech(speaker_id, text):
-    tokens = spec_generator.parse(text, normalize=False)
-    spectrogram = spec_generator.generate_spectrogram(tokens=tokens, speaker=speaker_id)
-    audio = model.convert_spectrogram_to_audio(spec=spectrogram)
-    audio = audio.cpu().detach().numpy()[0]
-    return Audio._make_wav(audio, 44100, False)
-
+    return tts.convert(text)
 
 class Handler(http.server.SimpleHTTPRequestHandler):
     def _set_headers(self):
