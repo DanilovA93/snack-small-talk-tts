@@ -12,7 +12,7 @@ device = "cuda" if torch.cuda.is_available() else "cpu"
 print(TTS().list_models())
 
 # Init TTS with the target model name
-tts = TTS(model_name="tts_models/de/thorsten/tacotron2-DDC", progress_bar=False).to(device)
+tts = TTS("tts_models/de/thorsten/tacotron2-DDC").to(device)
 
 def text_to_speech(speaker_id, text):
     return tts.tts(text=text, language="en")
