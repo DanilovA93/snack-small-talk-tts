@@ -2,13 +2,20 @@ import http.server
 import socketserver
 import json
 from http import HTTPStatus
-import coqui_tts as ctts
-import speech_recognition as sr
+import torch
+from TTS.api import TTS
 
-tts = ctts.TextToSpeech()
+# Get device
+device = "cuda" if torch.cuda.is_available() else "cpu"
+
+# List available 🐸TTS models
+print(TTS().list_models())
+
+# Init TTS with the target model name
+tts = TTS(model_name="tts_models/de/thorsten/tacotron2-DDC", progress_bar=False).to(device)
 
 def text_to_speech(speaker_id, text):
-    return tts.convert(text)
+    return tts.tts(text=text, language="en")
 
 class Handler(http.server.SimpleHTTPRequestHandler):
     def _set_headers(self):
