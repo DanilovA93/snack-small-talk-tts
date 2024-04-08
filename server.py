@@ -8,10 +8,9 @@ from TTS.api import TTS
 tts = TTS("tts_models/multilingual/multi-dataset/xtts_v2", gpu=True)
 
 def text_to_speech(speaker_id, text):
-    print(tts.speakers)
     return tts.tts(
         text=text,
-        speaker="Ana Florence",
+        speaker_wav="audio.wav",
         language="en"
     )
 
