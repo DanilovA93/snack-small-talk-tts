@@ -10,7 +10,7 @@ tts = TTS("tts_models/multilingual/multi-dataset/xtts_v2", gpu=True)
 def text_to_speech(speaker_id, text):
     return tts.tts(
         text=text,
-        speaker=tts.speakers[speaker_id],
+        speaker=speaker_id,
         language="en"
     )
 
