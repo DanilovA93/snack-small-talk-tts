@@ -5,11 +5,10 @@ from http import HTTPStatus
 from TTS.api import TTS
 
 # Init TTS with the target model name
-tts = TTS(model_name="tts_models/de/thorsten/tacotron2-DDC", gpu=True)
+tts = TTS("tts_models/multilingual/multi-dataset/xtts_v2", gpu=True)
 
 def text_to_speech(speaker_id, text):
-    tts.tts_to_file(text="Ich bin eine Testnachricht.")
-    return "OK"
+    return tts.tts(text=text, language="en")
 
 class Handler(http.server.SimpleHTTPRequestHandler):
     def _set_headers(self):
