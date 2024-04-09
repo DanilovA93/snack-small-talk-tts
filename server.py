@@ -13,11 +13,12 @@ device = "cuda" if torch.cuda.is_available() else "cpu"
 tts = TTS("tts_models/multilingual/multi-dataset/xtts_v2").to(device)
 
 
-def text_to_speech(text, emotion='Neutral') -> bytes:
+def text_to_speech(text, emotion) -> bytes:
     wav = tts.tts(
         text=text,
-        speaker_wav="./samples_en_sample.wav",
+        speaker="Ana Florence",
         language="en",
+        speaker_wav="./samples_en_sample.wav",
         emotion=emotion
     )
     return Audio._make_wav(wav, 24000, False)
@@ -37,7 +38,10 @@ class Handler(http.server.SimpleHTTPRequestHandler):
         message = json.loads(self.rfile.read(content_len))
         self._set_headers()
         print('Rq message: ', message)
-        wav = text_to_speech(message['text'], message['emotion'])
+        wav = text_to_speech(
+            message['text'],
+            message.get("emotion", 'Neutral')
+        )
         self.wfile.write(wav)
 
     def do_GET(self):
