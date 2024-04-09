@@ -19,7 +19,7 @@ def text_to_speech(speaker_id, text):
     return tts.tts(
         text=text,
         # speaker=tts.speakers[0],
-        # speaker_wav="audio.wav",
+        speaker_wav="/home/ubuntu/snack-small-talk-tts/w.wav",
         language="en"
     )
 
