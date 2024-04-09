@@ -2,6 +2,7 @@ import http.server
 import socketserver
 import json
 from http import HTTPStatus
+import torch
 from TTS.api import TTS
 
 # Get device
