@@ -12,16 +12,12 @@ device = "cuda" if torch.cuda.is_available() else "cpu"
 tts = TTS("tts_models/multilingual/multi-dataset/xtts_v2").to(device)
 
 def text_to_speech(speaker_id, text):
-
-    # List available 🐸TTS models
-    print(TTS().list_models())
-
-    return tts.tts(
+    wav = tts.tts(
         text=text,
-        # speaker=tts.speakers[0],
         speaker_wav="/home/ubuntu/snack-small-talk-tts/w.wav",
         language="en"
     )
+    return wav
 
 class Handler(http.server.SimpleHTTPRequestHandler):
     def _set_headers(self):
@@ -37,7 +33,8 @@ class Handler(http.server.SimpleHTTPRequestHandler):
         message = json.loads(self.rfile.read(content_len))
         self._set_headers()
         print('Rq message: ', message)
-        self.wfile.write(text_to_speech(message['speaker_id'], message['text']))
+        wav = text_to_speech(message['speaker_id'], message['text'])
+        self.wfile.write(wav)
 
     def do_GET(self):
         self.send_response(HTTPStatus.OK)
