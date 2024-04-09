@@ -14,7 +14,7 @@ tts = TTS("tts_models/multilingual/multi-dataset/xtts_v2").to(device)
 def text_to_speech(speaker_id, text):
     wav = tts.tts(
         text=text,
-        speaker_wav="/home/ubuntu/snack-small-talk-tts/w.wav",
+        speaker_wav="./samples_en_sample.wav",
         language="en"
     )
     return wav
@@ -34,7 +34,7 @@ class Handler(http.server.SimpleHTTPRequestHandler):
         self._set_headers()
         print('Rq message: ', message)
         wav = text_to_speech(message['speaker_id'], message['text'])
-        self.wfile.write(bytes(wav))
+        self.wfile.write(wav)
 
     def do_GET(self):
         self.send_response(HTTPStatus.OK)
