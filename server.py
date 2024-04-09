@@ -4,13 +4,19 @@ import json
 from http import HTTPStatus
 from TTS.api import TTS
 
+# Get device
+device = "cuda" if torch.cuda.is_available() else "cpu"
+
+# List available 🐸TTS models
+print(TTS().list_models())
+
 # Init TTS with the target model name
-tts = TTS("tts_models/multilingual/multi-dataset/xtts_v2", gpu=True)
+tts = TTS("tts_models/multilingual/multi-dataset/xtts_v2").to(device)
 
 def text_to_speech(speaker_id, text):
     return tts.tts(
         text=text,
-        speaker=tts.speakers[0],
+        # speaker=tts.speakers[0],
         # speaker_wav="audio.wav",
         language="en"
     )
