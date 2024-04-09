@@ -34,7 +34,7 @@ class Handler(http.server.SimpleHTTPRequestHandler):
         self._set_headers()
         print('Rq message: ', message)
         wav = text_to_speech(message['speaker_id'], message['text'])
-        self.wfile.write(wav)
+        self.wfile.write(bytes(wav))
 
     def do_GET(self):
         self.send_response(HTTPStatus.OK)
