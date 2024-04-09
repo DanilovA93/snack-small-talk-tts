@@ -4,6 +4,7 @@ import json
 from http import HTTPStatus
 import torch
 from TTS.api import TTS
+from IPython.display import Audio
 
 # Get device
 device = "cuda" if torch.cuda.is_available() else "cpu"
@@ -11,13 +12,16 @@ device = "cuda" if torch.cuda.is_available() else "cpu"
 # Init TTS with the target model name
 tts = TTS("tts_models/multilingual/multi-dataset/xtts_v2").to(device)
 
-def text_to_speech(speaker_id, text):
+
+def text_to_speech(text, emotion='Neutral') -> bytes:
     wav = tts.tts(
         text=text,
         speaker_wav="./samples_en_sample.wav",
-        language="en"
+        language="en",
+        emotion=emotion
     )
-    return wav
+    return Audio._make_wav(wav, 24000, False)
+
 
 class Handler(http.server.SimpleHTTPRequestHandler):
     def _set_headers(self):
@@ -33,7 +37,7 @@ class Handler(http.server.SimpleHTTPRequestHandler):
         message = json.loads(self.rfile.read(content_len))
         self._set_headers()
         print('Rq message: ', message)
-        wav = text_to_speech(message['speaker_id'], message['text'])
+        wav = text_to_speech(message['text'], message['emotion'])
         self.wfile.write(wav)
 
     def do_GET(self):
