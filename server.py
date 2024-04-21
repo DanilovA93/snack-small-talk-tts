@@ -35,13 +35,14 @@ gpt_cond_latent, speaker_embedding = model.get_conditioning_latents(audio_path=[
 
 
 def text_to_speech(text, emotion) -> bytes:
+    print("Inferencing...")
     out = model.inference(
         "It took me quite a long time to develop a voice and now that I have it I am not going to be silent.",
         "en",
         gpt_cond_latent,
-        speaker_embedding,
-        temperature=0.7 # Add custom parameters here
+        speaker_embedding
     )
+    print("Making wav...")
     return Audio._make_wav(out, 24000, False)
 
 
