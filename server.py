@@ -30,18 +30,21 @@ model.load_checkpoint(
     speaker_file_path=SPEAKER_PATH
 )
 model.cuda()
+print("Loaded")
 
 print("Computing speaker latents...")
 gpt_cond_latent, speaker_embedding = model.get_conditioning_latents(audio_path=[SPEAKER_REFERENCE])
+print("Computed")
 
 
 def text_to_speech(text, emotion) -> bytes:
     print("Inferencing...")
     out = model.inference(
         text,
-        "en",
-        gpt_cond_latent,
-        speaker_embedding
+        language="en",
+        emotion=emotion,
+        gpt_cond_latent=gpt_cond_latent,
+        speaker_embedding=speaker_embedding
     )
     print("Making wav...")
     return Audio._make_wav(torch.tensor(out["wav"]).unsqueeze(0), 24000, False)
