@@ -6,26 +6,36 @@ from TTS.tts.configs.xtts_config import XttsConfig
 from TTS.tts.models.xtts import Xtts
 from IPython.display import Audio
 
+# Add here the xtts_config path
+CONFIG_PATH = "./resources/config.json"
+# Add here the vocab file that you have used to train the model
+TOKENIZER_PATH = "./resources/xtts/vocab.json"
+# Add here the checkpoint that you want to do inference with
+XTTS_CHECKPOINT = "./resources/xtts/model.pth"
+# Add here the speaker reference
+SPEAKER_REFERENCE = "./resources/samples/en_female_sample.wav"
+
+
+print("Loading model...")
 config = XttsConfig()
-config.load_json("./resources/config.json")
+config.load_json(CONFIG_PATH)
 model = Xtts.init_from_config(config)
-model.load_checkpoint(config, checkpoint_dir="./resources/xtts/", eval=True)
+model.load_checkpoint(config, checkpoint_path=XTTS_CHECKPOINT, vocab_path=TOKENIZER_PATH, use_deepspeed=False)
 model.cuda()
+
+print("Computing speaker latents...")
+gpt_cond_latent, speaker_embedding = model.get_conditioning_latents(audio_path=[SPEAKER_REFERENCE])
 
 
 def text_to_speech(text, emotion) -> bytes:
-    print(1)
-    outputs = model.synthesize(
-        text,
-        config,
-        speaker_wav="./resources/samples/en_female_sample.wav",
-        gpt_cond_len=3,
-        language="en",
+    out = model.inference(
+        "It took me quite a long time to develop a voice and now that I have it I am not going to be silent.",
+        "en",
+        gpt_cond_latent,
+        speaker_embedding,
+        temperature=0.7 # Add custom parameters here
     )
-
-    print(2)
-
-    return Audio._make_wav(outputs, 24000, False)
+    return Audio._make_wav(out, 24000, False)
 
 
 class Handler(http.server.SimpleHTTPRequestHandler):
