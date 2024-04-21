@@ -12,6 +12,7 @@ CONFIG_PATH = "./resources/config.json"
 TOKENIZER_PATH = "./resources/xtts/vocab.json"
 # Add here the checkpoint that you want to do inference with
 XTTS_CHECKPOINT = "./resources/xtts/model.pth"
+SPEAKER_PATH = "./resources/xtts/speakers_xtts.pth"
 # Add here the speaker reference
 SPEAKER_REFERENCE = "./resources/samples/en_female_sample.wav"
 
@@ -20,7 +21,13 @@ print("Loading model...")
 config = XttsConfig()
 config.load_json(CONFIG_PATH)
 model = Xtts.init_from_config(config)
-model.load_checkpoint(config, checkpoint_path=XTTS_CHECKPOINT, vocab_path=TOKENIZER_PATH, use_deepspeed=False)
+model.load_checkpoint(
+    config,
+    checkpoint_path=XTTS_CHECKPOINT,
+    vocab_path=TOKENIZER_PATH,
+    use_deepspeed=False,
+    speaker_file_path=SPEAKER_PATH
+)
 model.cuda()
 
 print("Computing speaker latents...")
