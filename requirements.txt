@@ -1,2 +1,2 @@
-tts
-ipython
+tts == 0.22.0
+ipython == 8.23.0
