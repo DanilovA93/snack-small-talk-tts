@@ -2,25 +2,26 @@ import http.server
 import socketserver
 import json
 from http import HTTPStatus
-from TTS.api import TTS
+from TTS.tts.configs.xtts_config import XttsConfig
+from TTS.tts.models.xtts import Xtts
 from IPython.display import Audio
 
-# Get device
-device = "cuda"
-
-# Init TTS with the target model name
-tts = TTS("tts_models/multilingual/multi-dataset/xtts_v2").to(device)
+config = XttsConfig()
+config.load_json("./resources/config.json")
+model = Xtts.init_from_config(config)
+model.load_checkpoint(config, checkpoint_dir="/resources/xtts/", eval=True)
+model.cuda()
 
 
 def text_to_speech(text, emotion) -> bytes:
-    wav = tts.tts(
-        text=text,
-        speaker="Ana Florence",
+    outputs = model.synthesize(
+        text,
+        config,
+        speaker_wav="./resources/samples/en_female_sample.wav",
+        gpt_cond_len=3,
         language="en",
-        speaker_wav="./samples_en_sample.wav",
-        emotion=emotion
     )
-    return Audio._make_wav(wav, 24000, False)
+    return Audio._make_wav(outputs, 24000, False)
 
 
 class Handler(http.server.SimpleHTTPRequestHandler):
