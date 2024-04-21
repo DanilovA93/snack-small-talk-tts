@@ -14,6 +14,7 @@ model.cuda()
 
 
 def text_to_speech(text, emotion) -> bytes:
+    print(1)
     outputs = model.synthesize(
         text,
         config,
@@ -21,6 +22,9 @@ def text_to_speech(text, emotion) -> bytes:
         gpt_cond_len=3,
         language="en",
     )
+
+    print(2)
+
     return Audio._make_wav(outputs, 24000, False)
 
 
