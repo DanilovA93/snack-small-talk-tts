@@ -39,15 +39,21 @@ print("====================APPLICATION IS READY====================")
 
 def text_to_speech(
         text,
-        temperature=0.7
+        temperature=0.75,
+        repetition_penalty=10.0,
+        top_p=1.0,
+        top_k=50
 ) -> bytes:
     print("Processing...")
     out = model.inference(
         text,
         language="en",
-        temperature=temperature,
         gpt_cond_latent=gpt_cond_latent,
-        speaker_embedding=speaker_embedding
+        speaker_embedding=speaker_embedding,
+        temperature=temperature,
+        repetition_penalty=repetition_penalty,
+        top_p=top_p,
+        top_k=top_k
     )
 
     print("Extracting wav...")
@@ -75,7 +81,10 @@ class Handler(http.server.SimpleHTTPRequestHandler):
         try:
             wav = text_to_speech(
                 message['text'],
-                message.get("temperature", None)
+                message.get("temperature", None),
+                message.get("repetition_penalty", None),
+                message.get("top_p", None),
+                message.get("top_k", None)
             )
             self.wfile.write(wav)
         except KeyError as err:
