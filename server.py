@@ -41,7 +41,7 @@ def text_to_speech(
         text,
         temperature=0.7
 ) -> bytes:
-    print("Inferencing...")
+    print("Processing...")
     out = model.inference(
         text,
         language="en",
@@ -49,8 +49,12 @@ def text_to_speech(
         gpt_cond_latent=gpt_cond_latent,
         speaker_embedding=speaker_embedding
     )
+
+    print("Extracting wav...")
+    data = torch.tensor(out["wav"]).unsqueeze(0)
+
     print("Making wav...")
-    return Audio._make_wav(torch.tensor(out["wav"]).unsqueeze(0), 24000, False)
+    return Audio._make_wav(data, 24000, False)
 
 
 class Handler(http.server.SimpleHTTPRequestHandler):
