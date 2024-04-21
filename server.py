@@ -33,15 +33,19 @@ model.cuda()
 
 print("Computing speaker latents...")
 gpt_cond_latent, speaker_embedding = model.get_conditioning_latents(audio_path=[SPEAKER_REFERENCE])
-print("Application is ready")
+
+print("====================Application is ready====================")
 
 
-def text_to_speech(text, emotion) -> bytes:
+def text_to_speech(
+        text,
+        temperature=0.7
+) -> bytes:
     print("Inferencing...")
     out = model.inference(
         text,
         language="en",
-        temperature=0.1,
+        temperature=temperature,
         gpt_cond_latent=gpt_cond_latent,
         speaker_embedding=speaker_embedding
     )
@@ -67,7 +71,7 @@ class Handler(http.server.SimpleHTTPRequestHandler):
         try:
             wav = text_to_speech(
                 message['text'],
-                message.get("emotion", 'Neutral')
+                message.get("temperature", None)
             )
             self.wfile.write(wav)
         except KeyError as err:
