@@ -13,7 +13,7 @@ device = "cuda" if torch.cuda.is_available() else "cpu"
 tts = TTS("tts_models/multilingual/multi-dataset/xtts_v2").to(device)
 
 
-def text_to_speech(text, emotion) -> bytes:
+def text_to_speech(text, emotion, rate = 24000) -> bytes:
     wav = tts.tts(
         text=text,
         speaker="Ana Florence",
@@ -21,7 +21,10 @@ def text_to_speech(text, emotion) -> bytes:
         speaker_wav="./samples_en_sample.wav",
         emotion=emotion
     )
-    return Audio._make_wav(wav, 24000, False)
+    print(1)
+    audio = Audio._make_wav(wav, rate, False)
+    print(2)
+    return audio
 
 
 class Handler(http.server.SimpleHTTPRequestHandler):
@@ -36,13 +39,14 @@ class Handler(http.server.SimpleHTTPRequestHandler):
     def do_POST(self):
         content_len = int(self.headers.get('Content-Length'))
         message = json.loads(self.rfile.read(content_len))
-        print('Rq message: ', message)
+        print('Тело запроса: ', message)
 
         self._set_headers()
         try:
             wav = text_to_speech(
                 message['text'],
-                message.get("emotion", 'Neutral')
+                message.get("emotion", 'Neutral'),
+                message.get("rate", None)
             )
             self.wfile.write(wav)
         except KeyError as err:
