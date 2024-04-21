@@ -26,7 +26,7 @@ model.load_checkpoint(
     config,
     checkpoint_path=XTTS_CHECKPOINT,
     vocab_path=TOKENIZER_PATH,
-    use_deepspeed=False,
+    use_deepspeed=True, #def false
     speaker_file_path=SPEAKER_PATH
 )
 model.cuda()
