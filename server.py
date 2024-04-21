@@ -36,13 +36,17 @@ class Handler(http.server.SimpleHTTPRequestHandler):
     def do_POST(self):
         content_len = int(self.headers.get('Content-Length'))
         message = json.loads(self.rfile.read(content_len))
-        self._set_headers()
         print('Rq message: ', message)
-        wav = text_to_speech(
-            message['text'],
-            message.get("emotion", 'Neutral')
-        )
-        self.wfile.write(wav)
+
+        self._set_headers()
+        try:
+            wav = text_to_speech(
+                message['text'],
+                message.get("emotion", 'Neutral')
+            )
+            self.wfile.write(wav)
+        except KeyError as err:
+            self.wfile.write(f"Ошибка, отсутствуют необходимые параметры в теле запроса: {err}".encode())
 
     def do_GET(self):
         self.send_response(HTTPStatus.OK)
