@@ -9,7 +9,7 @@ from IPython.display import Audio
 config = XttsConfig()
 config.load_json("./resources/config.json")
 model = Xtts.init_from_config(config)
-model.load_checkpoint(config, checkpoint_dir="/resources/xtts/", eval=True)
+model.load_checkpoint(config, checkpoint_dir="./resources/xtts/", eval=True)
 model.cuda()
 
 
