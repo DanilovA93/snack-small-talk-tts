@@ -34,7 +34,7 @@ model.cuda()
 print("Computing speaker latents...")
 gpt_cond_latent, speaker_embedding = model.get_conditioning_latents(audio_path=[SPEAKER_REFERENCE])
 
-print("====================Application is ready====================")
+print("====================APPLICATION IS READY====================")
 
 
 def text_to_speech(
@@ -65,7 +65,7 @@ class Handler(http.server.SimpleHTTPRequestHandler):
     def do_POST(self):
         content_len = int(self.headers.get('Content-Length'))
         message = json.loads(self.rfile.read(content_len))
-        print('Получено сообщение: ', message)
+        print('Rq body: ', message)
 
         self._set_headers()
         try:
@@ -75,7 +75,7 @@ class Handler(http.server.SimpleHTTPRequestHandler):
             )
             self.wfile.write(wav)
         except KeyError as err:
-            self.wfile.write(f"Ошибка, отсутствуют необходимые параметры в теле запроса: {err}".encode())
+            self.wfile.write(f"Error, required parameters are missing in the request body: {err}".encode())
 
     def do_GET(self):
         self.send_response(HTTPStatus.OK)
