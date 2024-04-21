@@ -30,11 +30,10 @@ model.load_checkpoint(
     speaker_file_path=SPEAKER_PATH
 )
 model.cuda()
-print("Loaded")
 
 print("Computing speaker latents...")
 gpt_cond_latent, speaker_embedding = model.get_conditioning_latents(audio_path=[SPEAKER_REFERENCE])
-print("Computed")
+print("Application is ready")
 
 
 def text_to_speech(text, emotion) -> bytes:
@@ -42,7 +41,7 @@ def text_to_speech(text, emotion) -> bytes:
     out = model.inference(
         text,
         language="en",
-        emotion=emotion,
+        temperature=0.1,
         gpt_cond_latent=gpt_cond_latent,
         speaker_embedding=speaker_embedding
     )
