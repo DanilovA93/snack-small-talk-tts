@@ -2,6 +2,7 @@ import http.server
 import socketserver
 import json
 from http import HTTPStatus
+import torch
 from TTS.tts.configs.xtts_config import XttsConfig
 from TTS.tts.models.xtts import Xtts
 from IPython.display import Audio
@@ -43,7 +44,7 @@ def text_to_speech(text, emotion) -> bytes:
         speaker_embedding
     )
     print("Making wav...")
-    return Audio._make_wav(out, 24000, False)
+    return Audio._make_wav(torch.tensor(out["wav"]).unsqueeze(0), 24000, False)
 
 
 class Handler(http.server.SimpleHTTPRequestHandler):
