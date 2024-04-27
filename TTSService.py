@@ -1,7 +1,9 @@
 import torch
+
 from TTS.tts.configs.xtts_config import XttsConfig
 from TTS.tts.models.xtts import Xtts
 from IPython.display import Audio
+
 
 # Add here the xtts_config path
 CONFIG_PATH = "./resources/config.json"
@@ -21,8 +23,9 @@ model.load_checkpoint(
     config,
     checkpoint_path=XTTS_CHECKPOINT,
     vocab_path=TOKENIZER_PATH,
-    use_deepspeed=False,
-    speaker_file_path=SPEAKER_PATH
+    speaker_file_path=SPEAKER_PATH,
+    eval=True,
+    use_deepspeed=True,
 )
 model.cuda()
 
@@ -31,22 +34,18 @@ gpt_cond_latent, speaker_embedding = model.get_conditioning_latents(audio_path=[
 
 
 def process(
-        text,
+        prompt,
         temperature=0.75,
-        repetition_penalty=10.0,
-        top_p=1.0,
-        top_k=50
+        repetition_penalty=5.0
 ) -> bytes:
     print("Processing...")
     out = model.inference(
-        text,
+        prompt,
         language="en",
         gpt_cond_latent=gpt_cond_latent,
         speaker_embedding=speaker_embedding,
         temperature=temperature,
-        repetition_penalty=repetition_penalty,
-        top_p=top_p,
-        top_k=top_k
+        repetition_penalty=repetition_penalty
     )
 
     print("Extracting wav...")

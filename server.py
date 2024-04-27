@@ -6,18 +6,14 @@ import TTSService
 
 
 def text_to_speech(
-        text,
+        prompt,
         temperature=0.75,
-        repetition_penalty=10.0,
-        top_p=1.0,
-        top_k=50
+        repetition_penalty=10.0
 ) -> bytes:
     return TTSService.process(
-        text=text,
+        prompt=prompt,
         temperature=temperature,
-        repetition_penalty=repetition_penalty,
-        top_p=top_p,
-        top_k=top_k
+        repetition_penalty=repetition_penalty
     )
 
 
@@ -38,11 +34,9 @@ class Handler(http.server.SimpleHTTPRequestHandler):
         self._set_headers()
         try:
             wav = text_to_speech(
-                message['text'],
+                message['prompt'],
                 message.get("temperature", None),
-                message.get("repetition_penalty", None),
-                message.get("top_p", None),
-                message.get("top_k", None)
+                message.get("repetition_penalty", None)
             )
             self.wfile.write(wav)
         except KeyError as err:
