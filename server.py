@@ -32,12 +32,12 @@ class Handler(http.server.SimpleHTTPRequestHandler):
         print('Rq body: ', message)
 
         try:
-            self._set_headers()
             wav = text_to_speech(
                 message['prompt'],
                 message.get("temperature", None),
                 message.get("repetition_penalty", None)
             )
+            self._set_headers()
             self.wfile.write(wav)
         except KeyError as err:
             self.wfile.write(f"Error, required parameters are missing in the request body: {err}".encode())
