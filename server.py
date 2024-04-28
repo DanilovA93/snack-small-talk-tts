@@ -8,7 +8,7 @@ import TTSService
 def text_to_speech(
         prompt,
         temperature=0.75,
-        repetition_penalty=10.0
+        repetition_penalty=5.0
 ) -> bytes:
     return TTSService.process(
         prompt=prompt,

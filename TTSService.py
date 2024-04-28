@@ -26,7 +26,7 @@ model.load_checkpoint(
     speaker_file_path=SPEAKER_PATH,
     eval=True,
     use_deepspeed=True,
-)
+).half()
 model.cuda()
 
 print("Computing speaker latents...")
@@ -44,7 +44,6 @@ def process(
         language="en",
         gpt_cond_latent=gpt_cond_latent,
         speaker_embedding=speaker_embedding,
-        temperature=temperature,
         repetition_penalty=repetition_penalty
     )
 
