@@ -26,7 +26,7 @@ model.load_checkpoint(
     speaker_file_path=SPEAKER_PATH,
     eval=True,
     # use_deepspeed=True,
-)
+).half()
 model.cuda()
 
 print("Computing speaker latents...")
