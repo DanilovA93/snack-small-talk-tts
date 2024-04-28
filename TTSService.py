@@ -27,7 +27,7 @@ model.load_checkpoint(
     eval=True,
     # use_deepspeed=True,
 )
-# model.cuda()
+model.cuda()
 
 print("Computing speaker latents...")
 gpt_cond_latent, speaker_embedding = model.get_conditioning_latents(audio_path=[SPEAKER_REFERENCE])
