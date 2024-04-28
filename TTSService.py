@@ -5,15 +5,11 @@ from TTS.tts.models.xtts import Xtts
 from IPython.display import Audio
 
 
-# Add here the xtts_config path
-CONFIG_PATH =       "./resources/config.json"
-# Add here the vocab file that you have used to train the model
-TOKENIZER_PATH =    "./resources/xtts/vocab.json"
-# Add here the checkpoint that you want to do inference with
-XTTS_CHECKPOINT =   "./resources/xtts/model.pth"
+CONFIG_PATH =       "./resources/config.json"  # Add here the xtts_config path
+TOKENIZER_PATH =    "./resources/xtts/vocab.json"  # Add here the vocab file that you have used to train the model
+XTTS_CHECKPOINT =   "./resources/xtts/model.pth"  # Add here the checkpoint that you want to do inference with
 SPEAKER_PATH =      "./resources/xtts/speakers_xtts.pth"
-# Add here the speaker reference
-SPEAKER_REFERENCE = "./resources/samples/en_female_sample.wav"
+SPEAKER_REFERENCE = "./resources/samples/en_female_sample.wav" # Add here the speaker reference
 
 print("Loading model...")
 config = XttsConfig()
@@ -26,7 +22,7 @@ model.load_checkpoint(
     speaker_file_path=SPEAKER_PATH,
     eval=True,
     # use_deepspeed=True,
-).half()
+)
 model.cuda()
 
 print("Computing speaker latents...")
