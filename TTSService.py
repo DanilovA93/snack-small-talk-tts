@@ -39,7 +39,7 @@ def process(
     print("Processing...")
     out = model.inference(
         prompt,
-        language="en",
+        language="ru",
         gpt_cond_latent=gpt_cond_latent,
         speaker_embedding=speaker_embedding,
         temperature=temperature,
