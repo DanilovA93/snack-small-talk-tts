@@ -5,11 +5,11 @@ from TTS.tts.models.xtts import Xtts
 from IPython.display import Audio
 
 
-CONFIG_PATH =       "./resources/config.json"  # Add here the xtts_config path
-TOKENIZER_PATH =    "./resources/xtts/vocab.json"  # Add here the vocab file that you have used to train the model
-XTTS_CHECKPOINT =   "./resources/xtts/model.pth"  # Add here the checkpoint that you want to do inference with
-SPEAKER_PATH =      "./resources/xtts/speakers_xtts.pth"
-SPEAKER_REFERENCE = "./resources/samples/en_female_sample.wav" # Add here the speaker reference
+CONFIG_PATH =               "./resources/config.json"
+CHECKPOINT_PATH =           "./resources/xtts/model.pth"
+TOKENIZER_PATH =            "./resources/xtts/vocab.json"
+SPEAKER_PATH =              "./resources/xtts/speakers_xtts.pth"
+SPEAKER_REFERENCE_PATH =    "./resources/samples/en_female_sample.wav"
 
 print("Loading model...")
 config = XttsConfig()
@@ -17,7 +17,7 @@ config.load_json(CONFIG_PATH)
 model = Xtts.init_from_config(config)
 model.load_checkpoint(
     config,
-    checkpoint_path=XTTS_CHECKPOINT,
+    checkpoint_path=CHECKPOINT_PATH,
     vocab_path=TOKENIZER_PATH,
     speaker_file_path=SPEAKER_PATH,
     eval=True,
@@ -26,7 +26,7 @@ model.load_checkpoint(
 model.cuda()
 
 print("Computing speaker latents...")
-gpt_cond_latent, speaker_embedding = model.get_conditioning_latents(audio_path=[SPEAKER_REFERENCE])
+gpt_cond_latent, speaker_embedding = model.get_conditioning_latents(audio_path=[SPEAKER_REFERENCE_PATH])
 
 print("GPT service is ready")
 
@@ -34,12 +34,12 @@ print("GPT service is ready")
 def process(
         prompt,
         temperature=0.75,
-        repetition_penalty=1.0
+        repetition_penalty=5.0
 ) -> bytes:
     print("Processing...")
     out = model.inference(
         prompt,
-        language="ru",
+        language="en",
         gpt_cond_latent=gpt_cond_latent,
         speaker_embedding=speaker_embedding,
         temperature=temperature,
