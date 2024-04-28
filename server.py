@@ -31,8 +31,8 @@ class Handler(http.server.SimpleHTTPRequestHandler):
         message = json.loads(self.rfile.read(content_len))
         print('Rq body: ', message)
 
-        self._set_headers()
         try:
+            self._set_headers()
             wav = text_to_speech(
                 message['prompt'],
                 message.get("temperature", None),

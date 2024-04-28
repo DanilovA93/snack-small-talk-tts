@@ -32,11 +32,13 @@ model.load_checkpoint(
 print("Computing speaker latents...")
 gpt_cond_latent, speaker_embedding = model.get_conditioning_latents(audio_path=[SPEAKER_REFERENCE])
 
+print("GPT service is ready")
+
 
 def process(
         prompt,
         temperature=0.75,
-        repetition_penalty=5.0
+        repetition_penalty=1.0
 ) -> bytes:
     print("Processing...")
     out = model.inference(
@@ -48,8 +50,6 @@ def process(
         repetition_penalty=repetition_penalty
     )
 
-    print("Extracting wav...")
     data = torch.tensor(out["wav"]).unsqueeze(0)
 
-    print("Making wav...")
     return Audio._make_wav(data, 24000, False)
