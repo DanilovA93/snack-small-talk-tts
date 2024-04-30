@@ -24,8 +24,7 @@ model.load_checkpoint(
     checkpoint_path=CHECKPOINT_PATH,
     vocab_path=TOKENIZER_PATH,
     speaker_file_path=SPEAKER_PATH,
-    eval=True,
-    # use_deepspeed=True,
+    eval=True
 )
 model.cuda()
 
@@ -52,7 +51,8 @@ def process(
         gpt_cond_latent=gpt_cond_latent,
         speaker_embedding=speaker_embedding,
         temperature=temperature,
-        repetition_penalty=repetition_penalty
+        repetition_penalty=repetition_penalty,
+        do_sample=False
     )
 
     data = torch.tensor(out["wav"]).unsqueeze(0)
