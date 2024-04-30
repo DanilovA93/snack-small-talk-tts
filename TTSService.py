@@ -23,7 +23,7 @@ model.load_checkpoint(
     config,
     checkpoint_path=CHECKPOINT_PATH,
     vocab_path=TOKENIZER_PATH,
-    # speaker_file_path=SPEAKER_PATH,
+    speaker_file_path=SPEAKER_PATH,
     eval=True,
     use_deepspeed=True,
 )
