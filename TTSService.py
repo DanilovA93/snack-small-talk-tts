@@ -31,7 +31,7 @@ model.cuda()
 
 print("Computing speaker latents...")
 gpt_cond_latent, speaker_embedding = model.get_conditioning_latents(
-    audio_path=SPEAKER_REFERENCE_PATH,
+    audio_path=[SPEAKER_REFERENCE_PATH],
     gpt_cond_len=30,
     gpt_cond_chunk_len=4,
     max_ref_length=60
