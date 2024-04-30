@@ -9,7 +9,7 @@ CONFIG_PATH =               "./resources/config.json"
 CHECKPOINT_PATH =           "./resources/xtts/model.pth"
 TOKENIZER_PATH =            "./resources/xtts/vocab.json"
 SPEAKER_PATH =              "./resources/xtts/speakers_xtts.pth"
-SPEAKER_REFERENCE_PATH =    "./resources/samples/en_female_sample.wav"
+SPEAKER_REFERENCE_PATH =    "./resources/samples/my_sample.wav"
 
 print("Loading model...")
 config = XttsConfig()
