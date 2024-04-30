@@ -25,7 +25,7 @@ model.load_checkpoint(
     vocab_path=TOKENIZER_PATH,
     speaker_file_path=SPEAKER_PATH,
     eval=True,
-    use_deepspeed=True,
+    # use_deepspeed=True,
 )
 model.cuda()
 
