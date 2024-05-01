@@ -48,7 +48,7 @@ def process(
 ) -> bytes:
     print("Processing...")
 
-    cached_response = get_from_cache(prompt)
+    cached_response = None  # get_from_cache(prompt)
     if cached_response is not None:
         return cached_response
     else:
