@@ -87,6 +87,6 @@ def cache(request, response):
     filename = str(hash(request))
     path_to_file = CACHE_DIR + filename
 
-    file = open(path_to_file, "w")
+    file = open(path_to_file, "wb")
     file.write(response)
     file.close()
