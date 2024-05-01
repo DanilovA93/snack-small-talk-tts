@@ -43,11 +43,10 @@ def process(
 ) -> bytes:
     print("Processing...")
 
-    cached_response = None  # get_from_cache(prompt)
+    cached_response = get_from_cache(prompt)
     if cached_response is not None:
         return cached_response
     else:
-        print("Base path...")
         output = model.inference(
             prompt,
             language=LANGUAGE,
@@ -58,9 +57,9 @@ def process(
             do_sample=True
         )
         data = torch.tensor(output["wav"]).unsqueeze(0)
-        return Audio._make_wav(data, 24000, False)
-        # cache(prompt, audio)
-        # return audio
+        audio = Audio._make_wav(data, 24000, False)
+        cache(prompt, audio)
+        return audio
 
 
 def get_from_cache(request):
@@ -78,7 +77,6 @@ def get_from_cache(request):
 
 
 def cache(request, response):
-    print("Cache...")
     filename = str(hash(request))
     path_to_file = CACHE_DIR + filename
 
