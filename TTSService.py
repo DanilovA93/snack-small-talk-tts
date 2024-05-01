@@ -63,9 +63,9 @@ def process(
             do_sample=False
         )
         data = torch.tensor(output["wav"]).unsqueeze(0)
-        audio = Audio._make_wav(data, 24000, False)
-        cache(prompt, audio)
-        return audio
+        return Audio._make_wav(data, 24000, False)
+        # cache(prompt, audio)
+        # return audio
 
 
 def get_from_cache(request):
