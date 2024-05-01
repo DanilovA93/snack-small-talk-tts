@@ -63,7 +63,6 @@ def process(
 
 
 def get_from_cache(request):
-    print("Get from cache...")
     filename = str(hash(request))
     path_to_file = CACHE_DIR + filename
 
