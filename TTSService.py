@@ -1,3 +1,4 @@
+import os
 import torch
 
 from TTS.tts.configs.xtts_config import XttsConfig
@@ -11,6 +12,7 @@ TOKENIZER_PATH =            "./resources/xtts/vocab.json"
 SPEAKER_PATH =              "./resources/xtts/speakers_xtts.pth"
 SPEAKER_REFERENCE_PATH =    "./resources/samples/female_sample.wav"
 
+CACHE_DIR = "./cache/"
 LANGUAGE = "en"
 
 print("Reading config...")
@@ -45,16 +47,43 @@ def process(
         repetition_penalty=5.0
 ) -> bytes:
     print("Processing...")
-    out = model.inference(
-        prompt,
-        language=LANGUAGE,
-        gpt_cond_latent=gpt_cond_latent,
-        speaker_embedding=speaker_embedding,
-        temperature=temperature,
-        repetition_penalty=repetition_penalty,
-        do_sample=False
-    )
 
-    data = torch.tensor(out["wav"]).unsqueeze(0)
+    cached_response = get_from_cache(prompt)
+    if cached_response is not None:
+        return cached_response
+    else:
+        output = model.inference(
+            prompt,
+            language=LANGUAGE,
+            gpt_cond_latent=gpt_cond_latent,
+            speaker_embedding=speaker_embedding,
+            temperature=temperature,
+            repetition_penalty=repetition_penalty,
+            do_sample=False
+        )
+        data = torch.tensor(output["wav"]).unsqueeze(0)
+        audio = Audio._make_wav(data, 24000, False)
+        cache(prompt, audio)
+        return audio
 
-    return Audio._make_wav(data, 24000, False)
+
+def get_from_cache(request):
+    filename = str(hash(request))
+    path_to_file = CACHE_DIR + filename
+
+    if os.path.isfile(path_to_file):
+        with open(path_to_file, "rb") as f:
+            output = f.read()
+            f.close()
+            return output
+    else:
+        return None
+
+
+async def cache(request, response):
+    filename = str(hash(request))
+    path_to_file = CACHE_DIR + filename
+
+    file = open(path_to_file, "w")
+    file.write(response)
+    file.close()
