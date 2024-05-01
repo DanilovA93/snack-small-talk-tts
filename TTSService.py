@@ -38,7 +38,7 @@ gpt_cond_latent, speaker_embedding = model.get_conditioning_latents(
     max_ref_length=60
 )
 
-print("GPT service is ready")
+print("TTS service is ready")
 
 
 def process(
@@ -52,6 +52,7 @@ def process(
     if cached_response is not None:
         return cached_response
     else:
+        print("Base path...")
         output = model.inference(
             prompt,
             language=LANGUAGE,
@@ -68,6 +69,7 @@ def process(
 
 
 def get_from_cache(request):
+    print("Get from cache...")
     filename = str(hash(request))
     path_to_file = CACHE_DIR + filename
 
@@ -81,6 +83,7 @@ def get_from_cache(request):
 
 
 async def cache(request, response):
+    print("Cache...")
     filename = str(hash(request))
     path_to_file = CACHE_DIR + filename
 
