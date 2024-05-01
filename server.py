@@ -29,7 +29,7 @@ class Handler(http.server.SimpleHTTPRequestHandler):
     def do_POST(self):
         content_len = int(self.headers.get('Content-Length'))
         message = json.loads(self.rfile.read(content_len))
-        print('Rq body: ', message)
+        print(f'Rq body: {message}')
 
         try:
             wav = text_to_speech(
