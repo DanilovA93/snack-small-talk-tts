@@ -82,7 +82,7 @@ def get_from_cache(request):
         return None
 
 
-async def cache(request, response):
+def cache(request, response):
     print("Cache...")
     filename = str(hash(request))
     path_to_file = CACHE_DIR + filename
