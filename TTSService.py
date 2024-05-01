@@ -60,7 +60,7 @@ def process(
             speaker_embedding=speaker_embedding,
             temperature=temperature,
             repetition_penalty=repetition_penalty,
-            do_sample=False
+            do_sample=True
         )
         data = torch.tensor(output["wav"]).unsqueeze(0)
         return Audio._make_wav(data, 24000, False)
